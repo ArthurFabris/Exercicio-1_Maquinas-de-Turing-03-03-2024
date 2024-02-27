@@ -209,9 +209,25 @@ def test():
                 print(f"Mensagem:mensagem5.txt\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
                 print("·"*100)
                 print()
+def ui():
+    arquivo = input("Qual eh o nome do arquivo que contem a mensagem ? > ")
+
+    if os.path.exists(arquivo):
+        texto_em_alemao = byte_para_alemao(arquivo)
+        print("·"*100)
+        print()
+        for phrase in texto_em_alemao["frases"]:
+            for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
+                if phrase == phrase_known:
+                    print(f"Mensagem:{arquivo}\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
+                    print("·"*100)
+                    print()
+
 
 def main():
-    test()
+    #test()
+
+    ui()
 
 main()
 
