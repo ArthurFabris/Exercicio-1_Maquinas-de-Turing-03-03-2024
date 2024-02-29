@@ -211,17 +211,37 @@ def test():
                 print()
 def ui():
     arquivo = input("Qual eh o nome do arquivo que contem a mensagem ? > ")
-
+#'''
     if os.path.exists(arquivo):
+        print("_______________________________NOVA-SESSAO______________________________")
+        print(f"Usando a mensagem: {arquivo}")
         texto_em_alemao = byte_para_alemao(arquivo)
-        print("·"*100)
-        print()
+        print("____________________________TABELA-DE-FRASES____________________________")
+        print("Compara as frases obtidas nas mensagens com as frases da tabela fornecida.")
+        print("________________________________________________________________________")
         for phrase in texto_em_alemao["frases"]:
             for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
                 if phrase == phrase_known:
-                    print(f"Mensagem:{arquivo}\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
-                    print("·"*100)
-                    print()
+                    print(f"Frase em Alemao: '{phrase}'\ntraducao: {traducao}\n")
+        print("_________________________FIM-DA-TABELA-DE-FRASES________________________\n")
+
+    # separar palavra por palavra
+    print("____________________________WORD-TABLE____________________________")
+    print("Tabela utilizada para encontrar palavras em frases alemãs e a tr-\nadução dessas frases.Utilizado quando uma mensagem NÃO contem fra-\nses coerentes que possam ser utilizadas de forma integra na tabela\nde traducao.")
+    print("__________________________________________________________________")
+    for word_list in texto_em_alemao["palavras"]:
+        for word in word_list:
+            for text_alem,text_port in dicionario_conhecido_sem_sinais.items():
+                for palavra in text_alem.split():
+                    if word == palavra:
+                        print(f'''A palavra: -> "{word}" <- está presente na frase:{text_alem}\nTraducao: {text_port}\n''')
+
+    print("_________________________END-OF-WORD-TABLE_________________________\n")
+
+    print("_______________________________FIM-DA-SESSAO______________________________")
+
+
+
 
 
 
