@@ -78,32 +78,36 @@ tabela_ascii_byte = {
 # primeiro caractere da mensagem será $ e para indicar fim da mensagem usaremos %.
 
 dicionario_conhecido_sem_sinais = {
-    ' an meine Verwandten ': 'para os meus parentes',
-    ' ankommen ': 'chegar',
-    ' bleibe ': 'permaneça',
-    ' David ging zu Ahimelechs Haus ': 'Davi foi à casa de Aimeleque',
-    ' David, als er in der Höhle war ': 'Davi, quando ele estava na caverna',
-    ' dein name ': 'seu nome',
-    ' dein Ruhm ': 'a sua fama',
-    ' du wirst frei sein ': 'você estará livre',
-    ' für immer ': 'para sempre',
-    ' gefangene ': 'prisioneiros',
-    ' hier bin ich ': 'aqui estou',
-    ' Jetzt ': 'agora',
-    ' luftangriff ': 'ataque aéreo',
-    ' rette den Kaiser ': 'salve o imperador',
-    ' rufen wir das junge Mädchen an und sehen, was sie sagt ': 'vamos chamar a jovem e ver o que ela diz',
-    ' starten sie den angriff ': 'iniciar o ataque',
-    ' stehen ': 'de pé',
-    ' treue und freundlichkeit ': 'fidelidade e bondade',
-    ' und heilen ': 'e cure',
-    ' vor dieser quelle ': 'diante desta fonte',
-    ' wahrend die Sonne scheint ': 'enquanto o sol brilhar',
-    ' ': 'fim da mensagem'
+    ' an meine Verwandten': 'para os meus parentes',
+    ' ankommen': 'chegar',
+    ' bleibe': 'permaneça',
+    ' David ging zu Ahimelechs Haus': 'Davi foi à casa de Aimeleque',
+    ' David, als er in der Höhle war': 'Davi, quando ele estava na caverna',
+    ' dein name': 'seu nome',
+    ' dein Ruhm': 'a sua fama',
+    ' du wirst frei sein': 'você estará livre',
+    ' für immer': 'para sempre',
+    ' gefangene': 'prisioneiros',
+    ' hier bin ich': 'aqui estou',
+    ' Jetzt': 'agora',
+    ' luftangriff': 'ataque aéreo',
+    ' rette den Kaiser': 'salve o imperador',
+    ' rufen wir das junge Mädchen an und sehen, was sie sagt': 'vamos chamar a jovem e ver o que ela diz',
+    ' starten sie den angriff': 'iniciar o ataque',
+    ' stehen': 'de pé',
+    ' treue und freundlichkeit': 'fidelidade e bondade',
+    ' und heilen': 'e cure',
+    ' vor dieser quelle': 'diante desta fonte',
+    ' wahrend die Sonne scheint': 'enquanto o sol brilhar',
 }
+# FUNÇÃO DE SUPORTE
+def list_txt_files():
+    current_dir = os.getcwd()
+    txt_files = [file for file in os.listdir(current_dir) if file.endswith('.txt')]
+    return txt_files
 
-
-def gerar_mensagem(phrase):
+# FUNÇAO DE SUPORTE
+def gerar_mensagem(phrase,name):
     # converte ascii para byte
     sequence_of_numbers = []
     for char in phrase:
@@ -112,10 +116,12 @@ def gerar_mensagem(phrase):
     files_and_directories = os.listdir()
     # Get the number of files
     number_of_files = len(files_and_directories)
-    with open(f"mensagem{number_of_files}.txt","a+") as fh:
+    with open(f"{name}.txt","a+") as fh:
         fh.write(sequence_as_string)
     return sequence_as_string
 
+
+# FUNÇAO DE SUPORTE
 def read_string_in_chunks(string, chunk_size=8):
     for i in range(0, len(string), chunk_size):
         yield string[i:i+chunk_size]
@@ -172,50 +178,24 @@ def byte_para_alemao(arquivo):
 
     return byte_para_alemao_dict
 
-def test():
-
-    #print(gerar_mensagem("$wahrend$die$Sonne$scheint$%")) # mensagem3.txt
-    #print("-"*50)
-    #print(gerar_mensagem("$vor$dieser$quelle$%")) # mensagem4.txt
-    #print("-"*50)
-    #print(gerar_mensagem("$vor$dieser$quelle$%$wahrend$die$Sonne$scheint$%")) # mensagem5.txt
-
-    texto_em_alemao = byte_para_alemao("mensagem3.txt")
-    texto_em_alemao1 = byte_para_alemao("mensagem4.txt")
-    texto_em_alemao2 = byte_para_alemao("mensagem5.txt")
-
-    print("\n")
-    print("#"*100)
-    print("Tabela de tradução dos arquivos [mensagem3.txt,mensagem4.txt,mensagem5.txt]")
-    print("#"*100)
-    print("\n")
-    print("·"*100)
-    print()
-    for phrase in texto_em_alemao["frases"]:
-        for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
-            if phrase == phrase_known:
-                print(f"Mensagem:mensagem3.txt\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
-                print("·"*100)
-                print()
-    for phrase in texto_em_alemao1["frases"]:
-        for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
-            if phrase == phrase_known:
-                print(f"Mensagem:mensagem4.txt\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
-                print("·"*100)
-                print()
-    for phrase in texto_em_alemao2["frases"]:
-        for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
-            if phrase == phrase_known:
-                print(f"Mensagem:mensagem5.txt\nFrase em Alemao: '{phrase}'\n\nTraducao:{traducao}\n")
-                print("·"*100)
-                print()
 def ui():
-    arquivo = input("Qual eh o nome do arquivo que contem a mensagem ? > ")
-#'''
+    lista_de_mensagens = list_txt_files()
+    print("_______________________________NOVA-SESSAO______________________________")
+    print(f"Mensagens:{lista_de_mensagens}")
+    arquivo = input("Qual eh o nome do arquivo que contem a mensagem (lembre-se de colocar .txt no final.) ? > ")
     if os.path.exists(arquivo):
-        print("_______________________________NOVA-SESSAO______________________________")
         print(f"Usando a mensagem: {arquivo}")
         texto_em_alemao = byte_para_alemao(arquivo)
+        print("Frases recuperadas:")
+        for phrase in texto_em_alemao['frases']:
+            print(f"--> {phrase}")
+        print("\nPalavras recuperadas:")
+        for word_list in texto_em_alemao['palavras']:
+            print("-->",end=" ")
+            for word in word_list:
+                print(word,end=";")
+            print("")
+
         print("____________________________TABELA-DE-FRASES____________________________")
         print("Compara as frases obtidas nas mensagens com as frases da tabela fornecida.")
         print("________________________________________________________________________")
@@ -241,14 +221,24 @@ def ui():
     print("_______________________________FIM-DA-SESSAO______________________________")
 
 
-
-
-
-
 def main():
-    #test()
+    os.system("clear")
+    choice = input("Decodificar ou codificar mensagem (1|2)? >")
 
-    ui()
+    if choice == "1":
+        ui()
+    elif choice == "2":
+        print("Para facilitar ainda, será usado o caractere $ no lugar do espaço convencional para indicar fim de\numa palavra/expressão e início de outra palavra e expressão. Neste caso, para fins didáticos, o\nprimeiro caractere da mensagem será $ e para indicar fim da mensagem usaremos %.\n")
+        print("EXEMPLO: 'was für ein schoner Tag' >> '$was$fur$ein$schoner$Tag%'\n")
+        mensagem = input("Digite a Mensagem >")
+        nome_mensagem = input("Digite o nome da mensagem >")
+        gerar_mensagem(mensagem,nome_mensagem)
+        print("Mensagem gerada.")
+    else:
+        print("Input invalido.")
+
+    input("Aperte enter para continuar. . .")
+    main()
 
 main()
 
