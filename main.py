@@ -1,20 +1,8 @@
-import os
 # Exercicio 1: Maquinas de turing.
-'''
-2.1 Nível 0
-Implementação de uma conversão se números binários para caracteres da tabela ASCII, no filme
-era em código morse. O código será passado em bytes e será convertido em um conjunto de
-caracteres que formará um texto em alemão.
-NOTA: praticamente todos os alunos fizeram a disciplina de AED, uma olhadinha nos
-trabalhos que foram feitos naquela disciplina vai ajudar bastante.
-2.2 Nível 1
-Implementação de uma conversão de alemão para português, porém, para facilitar a conversão
-será criado um dicionário de conversão direta de palavras ou expressões que pode ser criada
-diretamente no programa não necessitando de um arquivo externo, por exemplo, condicionais if-
-else para tal conversão.
-2.3 Nível 2
-Com a conversão do código para português, tentar descobrir o local do ataque.
-'''
+# Autores: Arthur Fabris, Ketholly, Mateus Silva, Vitor, Matheus
+# Ultima atualização: 29/02/2024 gmt-0300
+
+import os
 
 tabela_ascii_byte = {
     'a': '01100001',
@@ -77,6 +65,11 @@ tabela_ascii_byte = {
 # uma palavra/expressão e início de outra palavra e expressão. Neste caso, para fins didáticos, o
 # primeiro caractere da mensagem será $ e para indicar fim da mensagem usaremos %.
 
+
+# É adicionado um espaço no inicio das frases visto que caso eleas sejam enviadas numa mensagem
+# as mesmas vao começar com $, que se torna " " no algoritimo de
+# conversão da lista de letras para frases.
+
 dicionario_conhecido_sem_sinais = {
     ' an meine Verwandten': 'para os meus parentes',
     ' ankommen': 'chegar',
@@ -100,32 +93,30 @@ dicionario_conhecido_sem_sinais = {
     ' vor dieser quelle': 'diante desta fonte',
     ' wahrend die Sonne scheint': 'enquanto o sol brilhar',
 }
-# FUNÇÃO DE SUPORTE
+
+
+# listar todos os arquivos que terminarm em .txt no diretorio atual do programa
 def list_txt_files():
     current_dir = os.getcwd()
     txt_files = [file for file in os.listdir(current_dir) if file.endswith('.txt')]
     return txt_files
 
-# FUNÇAO DE SUPORTE
+# converte ascii para byte
 def gerar_mensagem(phrase,name):
-    # converte ascii para byte
     sequence_of_numbers = []
     for char in phrase:
-        sequence_of_numbers.append(tabela_ascii_byte[char])
-    sequence_as_string = ''.join(sequence_of_numbers)
-    files_and_directories = os.listdir()
-    # Get the number of files
-    number_of_files = len(files_and_directories)
+        sequence_of_numbers.append(tabela_ascii_byte[char]) # adiciona o valor da tabela_ascii correspondente da letra escrita em binario.
+    sequence_as_string = ''.join(sequence_of_numbers) # cria a string de sequencia de numeros
     with open(f"{name}.txt","a+") as fh:
-        fh.write(sequence_as_string)
-    return sequence_as_string
+        fh.write(sequence_as_string) # escreve a string de sequencia de numeros em um arquivo
 
 
-# FUNÇAO DE SUPORTE
+# lê a string de numeros binario de 8 em 8, pois são bytes.
 def read_string_in_chunks(string, chunk_size=8):
-    for i in range(0, len(string), chunk_size):
-        yield string[i:i+chunk_size]
+    for i in range(0, len(string), chunk_size): # para i no intervalo 0 até o tamanho da string de numeros binarios
+        yield string[i:i+chunk_size] # devolve a string com o buffer de tamanho 8
 
+# converte os arquivos com as strings em bytes para texto.
 def byte_para_alemao(arquivo):
     letras = []
     palavras = []
@@ -154,23 +145,21 @@ def byte_para_alemao(arquivo):
 
     # separa as letras em frases
     temp = ""
-    #print(letras)
     for lta in letras:
-        #print(lta,end="")
-        if lta == "$":
+        if lta == "$": # se a letra for $ substituir por " "
             temp +=" "
-        elif lta == "%":
+        elif lta == "%": # se for final da frase a string temp q está sendo modificada a cada iteração do loop vira uma frase que é armazenada na lista de frases
             frases.append(temp)
-            temp = ""
+            temp = "" # reseta a string da frase temporaria para ser vazia
         else:
             temp += lta
-        #print(temp)
 
 
     # separa as frases em palavras
     for frase in frases:
         palavras.append(frase.split())
 
+    # cria um dicionario com as letras,palavras e frases do arquivo selecionado.
     byte_para_alemao_dict = {
         "letras":letras,
         "palavras":palavras,
@@ -199,28 +188,28 @@ def ui():
         print("____________________________TABELA-DE-FRASES____________________________")
         print("Compara as frases obtidas nas mensagens com as frases da tabela fornecida.")
         print("________________________________________________________________________")
-        for phrase in texto_em_alemao["frases"]:
-            for phrase_known,traducao in dicionario_conhecido_sem_sinais.items():
-                if phrase == phrase_known:
-                    print(f"Frase em Alemao: '{phrase}'\ntraducao: {traducao}\n")
+        for phrase in texto_em_alemao["frases"]: # para cada frase encontrada no arquivo
+            for phrase_known,traducao in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases do tabela conhecido
+                if phrase == phrase_known: # verifique se a frase achada no arquivo é igual a alguma frase no tabela
+                    print(f"Frase em Alemao: '{phrase}'\ntraducao: {traducao}\n") # se sim, imprima a frase traduzida equivalente na tabela
         print("_________________________FIM-DA-TABELA-DE-FRASES________________________\n")
 
-    # separar palavra por palavra
-    print("____________________________WORD-TABLE____________________________")
-    print("Tabela utilizada para encontrar palavras em frases alemãs e a tr-\nadução dessas frases.Utilizado quando uma mensagem NÃO contem fra-\nses coerentes que possam ser utilizadas de forma integra na tabela\nde traducao.")
-    print("__________________________________________________________________")
-    for word_list in texto_em_alemao["palavras"]:
-        for word in word_list:
-            for text_alem,text_port in dicionario_conhecido_sem_sinais.items():
-                for palavra in text_alem.split():
-                    if word == palavra:
-                        print(f'''A palavra: -> "{word}" <- está presente na frase:{text_alem}\nTraducao: {text_port}\n''')
+        # separar palavra por palavra
+        print("____________________________WORD-TABLE____________________________")
+        print("Tabela utilizada para encontrar palavras em frases alemãs e a tr-\nadução dessas frases.Utilizado quando uma mensagem NÃO contem fra-\nses coerentes que possam ser utilizadas de forma integra na tabela\nde traducao.")
+        print("__________________________________________________________________")
+        for word_list in texto_em_alemao["palavras"]: # para cada lista de palavras encontrada no arquivo
+            for word in word_list: # carregue uma palavra da lista
+                for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
+                    for palavra in text_alem.split(): # separe as palavras de cada frase
+                        if word == palavra: # se a palavra carregada da lista e compara com todas as palavras da tabela
+                            print(f'''A palavra: -> "{word}" <- está presente na frase:{text_alem}\nTraducao: {text_port}\n''') # caso econtre imprima a traduçao
 
-    print("_________________________END-OF-WORD-TABLE_________________________\n")
+        print("_________________________END-OF-WORD-TABLE_________________________\n")
 
-    print("_______________________________FIM-DA-SESSAO______________________________")
+        print("_______________________________FIM-DA-SESSAO______________________________")
 
-
+# loop principal do progama
 def main():
     os.system("clear")
     choice = input("Decodificar ou codificar mensagem (1|2)? >")
@@ -240,7 +229,8 @@ def main():
     input("Aperte enter para continuar. . .")
     main()
 
-main()
+if __name__ == "__main__":
+    main()
 
 
 
