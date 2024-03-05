@@ -202,7 +202,7 @@ def ui():
             for word in word_list: # carregue uma palavra da lista
                 for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
                     for palavra in text_alem.split(): # separe as palavras de cada frase
-                        if word == palavra: # se a palavra carregada da lista e compara com todas as palavras da tabela
+                        if word == palavra: # usa a palavra carregada da lista e compara com todas as palavras da tabela
                             print(f'''A palavra: -> "{word}" <- está presente na frase:{text_alem}\nTraducao: {text_port}\n''') # caso econtre imprima a traduçao
 
         print("_________________________END-OF-WORD-TABLE_________________________\n")
