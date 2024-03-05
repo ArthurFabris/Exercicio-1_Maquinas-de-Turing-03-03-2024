@@ -1,6 +1,6 @@
 # Exercicio 1: Maquinas de turing.
-# Autores: Arthur Fabris, Ketholly, Mateus Silva, Vitor, Matheus
-# Ultima atualização: 29/02/2024 gmt-0300
+# Autores: Arthur Fabris, Ketholly, Mateus Silva, Vitor, Matheus Gomes
+# Ultima atualização: 04/03/2024 gmt-0300
 
 import os
 
@@ -64,34 +64,28 @@ tabela_ascii_byte = {
 # Para facilitar ainda, será usado o caractere $ no lugar do espaço convencional para indicar fim de
 # uma palavra/expressão e início de outra palavra e expressão. Neste caso, para fins didáticos, o
 # primeiro caractere da mensagem será $ e para indicar fim da mensagem usaremos %.
-
-
-# É adicionado um espaço no inicio das frases visto que caso eleas sejam enviadas numa mensagem
-# as mesmas vao começar com $, que se torna " " no algoritimo de
-# conversão da lista de letras para frases.
-
 dicionario_conhecido_sem_sinais = {
-    ' an meine Verwandten': 'para os meus parentes',
-    ' ankommen': 'chegar',
-    ' bleibe': 'permaneça',
-    ' David ging zu Ahimelechs Haus': 'Davi foi à casa de Aimeleque',
-    ' David, als er in der Höhle war': 'Davi, quando ele estava na caverna',
-    ' dein name': 'seu nome',
-    ' dein Ruhm': 'a sua fama',
-    ' du wirst frei sein': 'você estará livre',
-    ' für immer': 'para sempre',
-    ' gefangene': 'prisioneiros',
-    ' hier bin ich': 'aqui estou',
-    ' Jetzt': 'agora',
-    ' luftangriff': 'ataque aéreo',
-    ' rette den Kaiser': 'salve o imperador',
-    ' rufen wir das junge Mädchen an und sehen, was sie sagt': 'vamos chamar a jovem e ver o que ela diz',
-    ' starten sie den angriff': 'iniciar o ataque',
-    ' stehen': 'de pé',
-    ' treue und freundlichkeit': 'fidelidade e bondade',
-    ' und heilen': 'e cure',
-    ' vor dieser quelle': 'diante desta fonte',
-    ' wahrend die Sonne scheint': 'enquanto o sol brilhar',
+    'anmeineVerwandten': 'para os meus parentes',
+    'ankommen': 'chegar',
+    'bleibe': 'permaneça',
+    'DavidgingzuAhimelechsHaus': 'Davi foi à casa de Aimeleque',
+    'DavidalserinderHohlewar': 'Davi, quando ele estava na caverna',
+    'deinname': 'seu nome',
+    'deinRuhm': 'a sua fama',
+    'duwirstfreisein': 'você estará livre',
+    'furimme': 'para sempre',
+    'gefangene': 'prisioneiros',
+    'Hierbinich': 'aqui estou',
+    'Jetzt': 'agora',
+    'luftangriff': 'ataque aéreo',
+    'rettedenKaiser': 'salve o imperador',
+    'rufenwirdasjungeMadchenanundsehenwassiesagt': 'vamos chamar a jovem e ver o que ela diz',
+    'startensiedenangriff': 'iniciar o ataque',
+    'stehen': 'de pé',
+    'treueundfreundlichkeit': 'fidelidade e bondade',
+    'undheilen': 'e cure',
+    'vordieserquelle': 'diante desta fonte',
+    'wahrenddieSonnescheint': 'enquanto o sol brilhar',
 }
 
 
@@ -144,6 +138,8 @@ def byte_para_alemao(arquivo):
                 letras.append(letra)
 
     # separa as letras em frases
+    for letra in letras:
+        print(letra,end='')
     temp = ""
     for lta in letras:
         if lta == "$": # se a letra for $ substituir por " "
@@ -173,39 +169,28 @@ def ui():
     print(f"Mensagens:{lista_de_mensagens}")
     arquivo = input("Qual eh o nome do arquivo que contem a mensagem (lembre-se de colocar .txt no final.) ? > ")
     if os.path.exists(arquivo):
-        print(f"Usando a mensagem: {arquivo}")
+        print(f"Usando a mensagem:\n",end='')
         texto_em_alemao = byte_para_alemao(arquivo)
-        print("Frases recuperadas:")
-        for phrase in texto_em_alemao['frases']:
-            print(f"--> {phrase}")
-        print("\nPalavras recuperadas:")
+        print()
+        print("Palavras do dicionario:")
+        for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
+                    for palavra in text_alem.split(): # separe as palavras de cada frase
+                        print(palavra,end=';')
+        print("\nPalavras e expressoes recuperadas:")
         for word_list in texto_em_alemao['palavras']:
             print("-->",end=" ")
             for word in word_list:
                 print(word,end=";")
             print("")
 
-        print("____________________________TABELA-DE-FRASES____________________________")
-        print("Compara as frases obtidas nas mensagens com as frases da tabela fornecida.")
-        print("________________________________________________________________________")
-        for phrase in texto_em_alemao["frases"]: # para cada frase encontrada no arquivo
-            for phrase_known,traducao in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases do tabela conhecido
-                if phrase == phrase_known: # verifique se a frase achada no arquivo é igual a alguma frase no tabela
-                    print(f"Frase em Alemao: '{phrase}'\ntraducao: {traducao}\n") # se sim, imprima a frase traduzida equivalente na tabela
-        print("_________________________FIM-DA-TABELA-DE-FRASES________________________\n")
-
-        # separar palavra por palavra
-        print("____________________________WORD-TABLE____________________________")
-        print("Tabela utilizada para encontrar palavras em frases alemãs e a tr-\nadução dessas frases.Utilizado quando uma mensagem NÃO contem fra-\nses coerentes que possam ser utilizadas de forma integra na tabela\nde traducao.")
         print("__________________________________________________________________")
         for word_list in texto_em_alemao["palavras"]: # para cada lista de palavras encontrada no arquivo
             for word in word_list: # carregue uma palavra da lista
                 for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
                     for palavra in text_alem.split(): # separe as palavras de cada frase
                         if word == palavra: # usa a palavra carregada da lista e compara com todas as palavras da tabela
-                            print(f'''A palavra: -> "{word}" <- está presente na frase:{text_alem}\nTraducao: {text_port}\n''') # caso econtre imprima a traduçao
+                            print(f'''-> "{word}" Traducao: {text_port}\n''') # caso econtre imprima a traduçao
 
-        print("_________________________END-OF-WORD-TABLE_________________________\n")
 
         print("_______________________________FIM-DA-SESSAO______________________________")
 
