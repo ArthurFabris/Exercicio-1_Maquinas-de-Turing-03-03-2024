@@ -75,7 +75,7 @@ dicionario_conhecido_sem_sinais = {
     'duwirstfreisein': 'você estará livre',
     'furimme': 'para sempre',
     'gefangene': 'prisioneiros',
-    'Hierbinich': 'aqui estou',
+    'hierbinich': 'aqui estou',
     'Jetzt': 'agora',
     'luftangriff': 'ataque aéreo',
     'rettedenKaiser': 'salve o imperador',
@@ -169,14 +169,14 @@ def ui():
     print(f"Mensagens:{lista_de_mensagens}")
     arquivo = input("Qual eh o nome do arquivo que contem a mensagem (lembre-se de colocar .txt no final.) ? > ")
     if os.path.exists(arquivo):
-        print(f"Usando a mensagem:\n",end='')
+        print(f"\nUsando a mensagem:",end='')
         texto_em_alemao = byte_para_alemao(arquivo)
-        print()
-        print("Palavras do dicionario:")
+        print('\n')
+        print("Palavras do dicionario:",end="")
         for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
                     for palavra in text_alem.split(): # separe as palavras de cada frase
                         print(palavra,end=';')
-        print("\nPalavras e expressoes recuperadas:")
+        print("\n\nPalavras e expressoes recuperadas:")
         for word_list in texto_em_alemao['palavras']:
             print("-->",end=" ")
             for word in word_list:
@@ -189,14 +189,15 @@ def ui():
                 for text_alem,text_port in dicionario_conhecido_sem_sinais.items(): # carregue todas as frases da tabela
                     for palavra in text_alem.split(): # separe as palavras de cada frase
                         if word == palavra: # usa a palavra carregada da lista e compara com todas as palavras da tabela
-                            print(f'''-> "{word}" Traducao: {text_port}\n''') # caso econtre imprima a traduçao
+                            print(f'''-> "{word}" Traducao: {text_port}\n''') # caso encontre imprima a traduçao
 
 
         print("_______________________________FIM-DA-SESSAO______________________________")
 
 # loop principal do progama
 def main():
-    os.system("clear")
+    os.system("clear") # linux
+    #os.system("cls")  # windows
     choice = input("Decodificar ou codificar mensagem (1|2)? >")
 
     if choice == "1":
